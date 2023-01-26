@@ -1,4 +1,8 @@
+import 'package:developer_board/src/screen/home.dart';
 import 'package:flutter/material.dart';
+import 'package:developer_board/src/repository/user_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 //회원가입 상태창
 class Register extends StatefulWidget {
@@ -9,8 +13,29 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final userRepo = UserRepo();
+
+  void _submitButton() async{
+
+    final prefs = await SharedPreferences.getInstance();
+    if(_formKey.currentState!.validate()){
+      String email = _emailController.text;
+      String name = _nameController.text;
+      String password = _passwordController.text;
+
+      String token = await userRepo.register(name, email, password);
+
+      if(token!= null){
+        await prefs.setString('token', token);
+        Navigator.push(context, MaterialPageRoute(builder: (b) => Home()));
+      }
+
+    }
+  }
 
 
   @override
@@ -28,8 +53,18 @@ class _RegisterState extends State<Register> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  controller: _nameController,
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(labelText: '이메일'),
+                  validator: (value){
+                    if(value==null || value.trim().isEmpty){
+                      return "이메일을 입력해주세요.";
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _nameController,
                     decoration: InputDecoration(labelText: '아이디'),
                     validator: (value){
                       if(value==null || value.trim().isEmpty){
@@ -44,7 +79,7 @@ class _RegisterState extends State<Register> {
                   decoration: InputDecoration(labelText: '비밀번호'),
                 ),
                 SizedBox(height: 30,),
-                ElevatedButton(onPressed: null, child: Text('가입하기')),
+                ElevatedButton(onPressed: _submitButton, child: Text('가입하기')),
               ],
             ),
           )
