@@ -26,11 +26,10 @@ class _HomeState extends State<Home> {
   }
   void _fetchData() async{
     bool result = await feedController.feedIndex();
-    if(result == false){
-      Get.to(()=> const Home());
+    if(!result){
+      Get.off(const Register());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +71,7 @@ class _HomeState extends State<Home> {
                   Icons.home,
                   color: Colors.grey[850],
                 ),
-                title: Text('Home'),
+                title: Text('자유게시판'),
                 onTap: () {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Home()));
                 },

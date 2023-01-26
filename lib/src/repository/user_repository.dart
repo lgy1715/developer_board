@@ -5,7 +5,7 @@ class UserRepository extends GetConnect{
   @override
   void onInit(){
     allowAutoSignedCert = true;
-    httpClient.baseUrl = Global.API_ROOT;
+    httpClient.baseUrl = Global.API_RRRR;
     httpClient.addRequestModifier<void>((request) {
       request.headers['Accept'] = 'application/json';
       return request;

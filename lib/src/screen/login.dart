@@ -14,7 +14,6 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
-  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -22,7 +21,7 @@ class _loginState extends State<login> {
   void _login() async{
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
-    if(token!= null){
+    if(token != null){
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Home()));
     }
   }

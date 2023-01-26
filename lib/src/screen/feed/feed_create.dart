@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'package:developer_board/src/Model/FeedModel.dart';
 import 'package:developer_board/src/screen/home.dart';
 import 'package:developer_board/src/util/validator_util.dart';
 import 'package:developer_board/src/view/components/custom_elevated_button.dart';
@@ -15,8 +16,11 @@ import 'package:developer_board/src/controller/feed_controller.dart';
 import 'package:xfile/xfile.dart';
 import '../../view/components/custom_text_form_field.dart';
 
+const snackBar = SnackBar(content: Text('글은 비워둘 수 없습니다'));
+
 class FeedCreate extends StatefulWidget {
-  const FeedCreate({super.key});
+  final FeedModel? beforeFeed;
+  const FeedCreate({super.key, this.beforeFeed});
 
   @override
   State<FeedCreate> createState() => _FeedCreateState();
@@ -26,27 +30,47 @@ class _FeedCreateState extends State<FeedCreate> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final contentController = TextEditingController();
-  var snackBar = SnackBar(content: Text('글은 비워둘 수 없습니다'));
   final _picker = ImagePicker();
   final FeedController feedController = Get.put(FeedController());
   int? tmpImg;
+
+  Future<void> submit() async {
+    String text = contentController.text;
+
+    if (text == '') {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      if (widget.beforeFeed == null) {
+        await feedController.feedCreate(contentController.text, tmpImg);
+      } else {
+        await feedController.feedEdit(
+            widget.beforeFeed!.id!, contentController.text);
+      }
+      Get.back();
+    }
+
+  }
+
+  void initState() {
+    super.initState();
+    _fillData();
+  }
+
+  _fillData() {
+    if (widget.beforeFeed != null) {
+      contentController.text = widget.beforeFeed!.content!;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('피드 작성'),
+        title: (widget.beforeFeed ==null) ? const Text('피드 작성'):const Text('피드 수정'),
         actions: [
           IconButton(
-              onPressed: () {
-                String content = contentController.text;
-                print("${content}");
-                if (content.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }else{
-                  feedController.feedCreate(content, tmpImg);
-                }
-              },
+              onPressed: submit,
               icon: Icon(Icons.save)),
         ],
       ),
@@ -68,13 +92,17 @@ class _FeedCreateState extends State<FeedCreate> {
                   funValidator: validateContent(
                   ),
                 ),
-                CustomElevatedButton(text: "글쓰기",
-                pageRoute: (){
-                  if(_formKey.currentState!.validate()){
-                    Navigator.push(context, MaterialPageRoute(builder: (content)=> const Home()));
-                  }
-                },
-                )
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: null,
+                      child: ImageBox(child: const Icon(Icons.image)),
+                      ),
+                      SizedBox(width: 30,),
+                      //previewImage(),
+                  ],
+                ),)
               ],
             ),
           ),
@@ -82,5 +110,25 @@ class _FeedCreateState extends State<FeedCreate> {
       ),
     );
   }
-
+/*
+  Widget previewImage(){
+    if(tmpImg ==null){
+      return const SizedBox();
+    }
+    return ImageBox(
+      child: Image.network("{Global.API_ROOT}/file/$tmpImg",
+      fit: BoxFit.cover,
+      ),
+    );
+  }
+*/
+  /*Future<void> _upload() async{
+    final file = await _picker.pickImage(source: ImageSource.gallery);
+    int? result = await feedController.imageUpload(file!.path, file.name);
+    if(result!= null){
+      setState(() {
+        tmpImg = result;
+      });
+    }
+  }*/
 }

@@ -1,98 +1,116 @@
+import 'package:developer_board/src/controller/feed_controller.dart';
+import 'package:developer_board/src/screen/feed/feed_create.dart';
 import 'package:developer_board/src/widget/my_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:developer_board/src/Model/FeedModel.dart';
+import 'package:get/get.dart';
+final feedController = Get.put(FeedController());
 
-class FeedShow extends StatelessWidget {
+class FeedShow extends StatefulWidget {
   final FeedModel feed;
   const FeedShow(this.feed, {super.key});
+
+  @override
+  State<FeedShow> createState() => _FeedShowState();
+}
+
+class _FeedShowState extends State<FeedShow> {
+
+  void initState() {
+    super.initState();
+    _feedShow();
+  }
+
+  _feedShow() {
+    feedController.feedShow(widget.feed.id!);
+  }
+
+  _feedDelete() async {
+    await feedController.feedDelete(widget.feed.id!);
+    Get.back();
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('피드'),
+        title: const Text('피드'),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(
+      body: GetBuilder<FeedController>(builder: (b) {
+        FeedModel? feed = b.feedOne;
+        if (feed == null) {
+          return const CircularProgressIndicator();
+        }
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MyPage(),
-              SizedBox(
-                width: 20,
+              Row(
+                children: [
+                  const MyPage(),
+                  const SizedBox(width: 20),
+                  Text(
+                    '${widget.feed.name}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
               ),
-              Text('${feed.name}',
-                style: const TextStyle(fontSize: 18),
+              const SizedBox(height: 20),
+              Text("${widget.feed.content}"),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const Expanded(child: SizedBox()),
+                  Text(
+                    '${widget.feed.createAt}',
+                  ),
+                ],
               ),
+              const SizedBox(height: 20),
+              Visibility(
+                visible: (feed.isMe == true),
+                child: Row(
+                  children: [
+                    const Expanded(child: SizedBox()),
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.off(() => FeedCreate(beforeFeed: widget.feed));
+                        },
+                        child: const Text('수정')),
+                    const SizedBox(width: 20),
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("피드 삭제"),
+                                content: const Text('정말 삭제하시겠습니까'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Get.back(),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: _feedDelete,
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('삭제')),
+                  ],
+                ),
+              )
             ],
           ),
-          const SizedBox(height: 20),
-          Text('${feed.content}'),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(child: SizedBox()),
-              Text(
-                '${feed.createAt}',
-              ),
-            ],
-          ),
-          SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(child: SizedBox()),
-              ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("피드 수정"),
-                          content: Text('정말 수정하시겠습니까?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'cancel'),
-                              child: const Text('cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('수정')),
-              TextButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("피드 삭제"),
-                          content: Text('정말 삭제하시겠습니까?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'cancel'),
-                              child: const Text('cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('삭제')),
-            ],
-          ),
-        ]),
-      ),
+        );
+      }),
     );
   }
 }
