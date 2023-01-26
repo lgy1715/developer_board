@@ -24,7 +24,8 @@ class FeedCreate extends StatefulWidget {
 
 class _FeedCreateState extends State<FeedCreate> {
   final _formKey = GlobalKey<FormState>();
-  final textController = TextEditingController();
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
   var snackBar = SnackBar(content: Text('글은 비워둘 수 없습니다'));
   final _picker = ImagePicker();
   final FeedController feedController = Get.put(FeedController());
@@ -38,11 +39,12 @@ class _FeedCreateState extends State<FeedCreate> {
         actions: [
           IconButton(
               onPressed: () {
-                String text = textController.text;
-                if (text.isEmpty) {
+                String content = contentController.text;
+                print("${content}");
+                if (content.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }else{
-                  feedController.feedCreate(text, tmpImg);
+                  feedController.feedCreate(content, tmpImg);
                 }
               },
               icon: Icon(Icons.save)),
@@ -56,10 +58,12 @@ class _FeedCreateState extends State<FeedCreate> {
             child: ListView(
               children: [
                 CustomTextFormField(
+                  funcontroller: titleController,
                   hint: "Title",
                   funValidator: validateTitle(),
                 ),
                 CustomTextFormArea(
+                  funcontroller: contentController,
                   hint: "Content",
                   funValidator: validateContent(
                   ),

@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
   void _fetchData() async{
     bool result = await feedController.feedIndex();
     if(result == false){
-      Get.off(()=> const Home());
+      Get.to(()=> const Home());
     }
   }
 
@@ -47,17 +47,7 @@ class _HomeState extends State<Home> {
                   backgroundImage: AssetImage('assets/images/download.png'),
                   backgroundColor: Colors.white,
                 ),
-                otherAccountsPictures: <Widget>[
-                  // 다른 계정 이미지[] set
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/download.jpg'),
-                  ),
-                  // CircleAvatar(
-                  //   backgroundColor: Colors.white,
-                  //   backgroundImage: AssetImage('assets/profile2.png'),
-                  // )
-                ],
+
                 accountName: Text('이관용'),
                 accountEmail: Text('lgy17150@tukorea.ac.kr'),
                 decoration: BoxDecoration(

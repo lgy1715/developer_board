@@ -1,4 +1,5 @@
 import 'package:developer_board/src/screen/home.dart';
+import 'package:developer_board/src/screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:developer_board/src/repository/user_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,19 +20,22 @@ class _RegisterState extends State<Register> {
   final _passwordController = TextEditingController();
   final userRepo = UserRepo();
 
+
   void _submitButton() async{
+    String email = _emailController.text;
+    String name = _nameController.text;
+    String password = _passwordController.text;
+
+    print("email: ${email} , name : ${name} , password: ${password}");
 
     final prefs = await SharedPreferences.getInstance();
     if(_formKey.currentState!.validate()){
-      String email = _emailController.text;
-      String name = _nameController.text;
-      String password = _passwordController.text;
 
       String token = await userRepo.register(name, email, password);
 
       if(token!= null){
         await prefs.setString('token', token);
-        Navigator.push(context, MaterialPageRoute(builder: (b) => Home()));
+        Navigator.push(context, MaterialPageRoute(builder: (b) => login()));
       }
 
     }
@@ -49,6 +53,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child:Form(
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

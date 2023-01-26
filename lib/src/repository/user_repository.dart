@@ -15,7 +15,7 @@ class UserRepository extends GetConnect{
 
   Future<String?> register(String name, String email, String password) async{
     Response response = await post(
-      "/api/user/register",{
+      "/api/users/register",{
       'name': name,
       'email':email,
       'password': password,
@@ -26,7 +26,7 @@ class UserRepository extends GetConnect{
 
   Future<String?> login(String email, String password) async{
     Response response = await post(
-      "/api/user/login",{
+      "/api/users/login",{
       'email': email,
       'password':password,
     },

@@ -21,7 +21,7 @@ class FeedRepository extends GetConnect{
     String? token = await userController.getToken();
     if(token == null) return null;
     Response response = await get(
-      "/api/feed",
+      "/api/posts",
       headers: {'token': token},
     );
     return response.statusCode == 401 ? null : response.body;
@@ -43,7 +43,7 @@ class FeedRepository extends GetConnect{
     String? token = await userController.getToken();
     if(token == null) return null;
     Response response = await post(
-      "/api/feed",
+      "/api/posts",
       {'content': content, "image_id": imageId},
       headers: {'token': token},
     );
@@ -53,7 +53,7 @@ class FeedRepository extends GetConnect{
     String? token = await userController.getToken();
     if(token == null) return null;
     Response response = await put(
-      "/api/feed/$id"
+      "/api/posts/$id"
       ,
       {'content': content},
       headers: {'token': token},
@@ -64,7 +64,7 @@ class FeedRepository extends GetConnect{
     String? token = await userController.getToken();
     if(token == null) return null;
     Response response = await delete(
-      "/api/feed/$id"
+      "/api/posts/$id"
       ,
       headers: {'token': token},
     );
@@ -74,7 +74,7 @@ class FeedRepository extends GetConnect{
     String? token = await userController.getToken();
     if(token == null) return null;
     Response response = await get(
-      "/api/feed/$id"
+      "/api/posts/$id"
       ,
       headers: {'token': token},
     );
