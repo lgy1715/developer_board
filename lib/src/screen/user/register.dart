@@ -32,7 +32,7 @@ class _RegisterState extends State<Register> {
     if(_formKey.currentState!.validate()){
 
       String token = await userRepo.register(name, email, password);
-
+      print("${token}");
       if(token!= null){
         await prefs.setString('token', token);
         Navigator.push(context, MaterialPageRoute(builder: (b) => login()));

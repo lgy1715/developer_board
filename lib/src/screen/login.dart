@@ -2,6 +2,8 @@ import 'package:developer_board/src/screen/home.dart';
 import 'package:developer_board/src/widget/feed_item.dart';
 import 'package:flutter/material.dart';
 import 'package:developer_board/src/screen/user/register.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../view/components/custom_elevated_button.dart';
 
 class login extends StatefulWidget {
@@ -16,6 +18,17 @@ class _loginState extends State<login> {
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void _login() async{
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token');
+    if(token!= null){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Home()));
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,13 +63,12 @@ class _loginState extends State<login> {
                         children: [
                           Expanded(child: SizedBox()),
                           ElevatedButton(onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (content)=> const Home()),
-                            );
+                            _login();
+
                           }, child: Text('로그인')),
                           SizedBox(width: 20,),
                           ElevatedButton(onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const Register()),
-                            );
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Register()));
                           }, child: Text('회원가입')),
                         ],
                       ),
