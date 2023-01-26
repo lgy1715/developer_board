@@ -69,10 +69,10 @@ class _RegisterState extends State<Register> {
                 ),
                 TextFormField(
                   controller: _nameController,
-                    decoration: InputDecoration(labelText: '아이디'),
+                    decoration: InputDecoration(labelText: '이름'),
                     validator: (value){
                       if(value==null || value.trim().isEmpty){
-                        return "아이디를 입력해주세요.";
+                        return "이름을 입력해주세요.";
                       }
                       return null;
                     },

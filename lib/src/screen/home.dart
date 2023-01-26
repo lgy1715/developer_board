@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final feedController = Get.put(FeedController());
+  final feedController = Get.put(FeedController(), tag: 'fcont');
 
   void initState(){
     super.initState();
@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
   void _fetchData() async{
     bool result = await feedController.feedIndex();
     if(!result){
-      Get.off(const Register());
+      Get.off(()=> Register());
     }
   }
 
@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> FeedCreate()));
+       Get.to(() => FeedCreate());
         },
         child: Icon(Icons.create),
       ),

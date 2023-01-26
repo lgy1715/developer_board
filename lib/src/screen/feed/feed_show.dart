@@ -7,6 +7,7 @@ import 'package:developer_board/src/Model/FeedModel.dart';
 import 'package:get/get.dart';
 final feedController = Get.put(FeedController());
 
+
 class FeedShow extends StatefulWidget {
   final FeedModel feed;
   const FeedShow(this.feed, {super.key});
@@ -39,7 +40,7 @@ class _FeedShowState extends State<FeedShow> {
         title: const Text('피드'),
       ),
       body: GetBuilder<FeedController>(builder: (b) {
-        FeedModel? feed = b.feedOne;
+        FeedModel? feed = b.getFeedOne();
         if (feed == null) {
           return const CircularProgressIndicator();
         }

@@ -1,3 +1,4 @@
+import 'package:developer_board/src/controller/user_controller.dart';
 import 'package:developer_board/src/screen/home.dart';
 import 'package:developer_board/src/widget/feed_item.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,11 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../view/components/custom_elevated_button.dart';
 
+final userController = UserController();
+
 class login extends StatefulWidget {
-  const login({Key? key}) : super(key: key);
+  login({Key? key}) : super(key: key);
+
 
   @override
   State<login> createState() => _loginState();
@@ -22,7 +26,9 @@ class _loginState extends State<login> {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token');
     if(token != null){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Home()));
+      Get.off(()=> Home());
+    }else{
+      userController.login(_emailController.text, _passwordController.text);
     }
   }
 
@@ -43,7 +49,7 @@ class _loginState extends State<login> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        controller: _nameController,
+                        controller: _emailController,
                         decoration: InputDecoration(labelText: '아이디'),
                         validator: (value){
                           if(value==null || value.trim().isEmpty){
@@ -67,7 +73,7 @@ class _loginState extends State<login> {
                           }, child: Text('로그인')),
                           SizedBox(width: 20,),
                           ElevatedButton(onPressed: (){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=> const Register()));
+                            Get.to(() => Register());
                           }, child: Text('회원가입')),
                         ],
                       ),

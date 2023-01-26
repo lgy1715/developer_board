@@ -4,7 +4,7 @@ import 'package:developer_board/src/controller/user_controller.dart';
 import '../shared/global.dart';
 
 class FeedRepository extends GetConnect{
-  final userController = Get.put(UserController());
+  final userController = Get.put(UserController(), tag: Get.parameters['12332']);
 
   @override
   void onInit(){

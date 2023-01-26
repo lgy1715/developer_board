@@ -32,7 +32,7 @@ class _FeedCreateState extends State<FeedCreate> {
   final contentController = TextEditingController();
   final _picker = ImagePicker();
   final FeedController feedController = Get.put(FeedController());
-  int? tmpImg;
+  // int? tmpImg;
 
   Future<void> submit() async {
     String text = contentController.text;
@@ -41,12 +41,11 @@ class _FeedCreateState extends State<FeedCreate> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
       if (widget.beforeFeed == null) {
-        await feedController.feedCreate(contentController.text, tmpImg);
+        await feedController.feedCreate(contentController.text, 1);
       } else {
         await feedController.feedEdit(
             widget.beforeFeed!.id!, contentController.text);
       }
-      Get.back();
     }
 
   }
@@ -92,17 +91,6 @@ class _FeedCreateState extends State<FeedCreate> {
                   funValidator: validateContent(
                   ),
                 ),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: null,
-                      child: ImageBox(child: const Icon(Icons.image)),
-                      ),
-                      SizedBox(width: 30,),
-                      //previewImage(),
-                  ],
-                ),)
               ],
             ),
           ),

@@ -11,6 +11,10 @@ class FeedController extends GetxController{
   List ? feedList = [];
   FeedModel ? feedOne;
 
+  getFeedOne(){
+    return feedOne;
+  }
+
   Future<bool> feedIndex() async{
     List? body = await feedRepo.feedIndex();
     if(body == null){
